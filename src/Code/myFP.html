@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <script>
+        var FP = FP || {};
+        FP.classColl = [];
+        FP.createCtor = function (params) {
+            //var that = this;
+            var f = function creator(classObject, createTimeArgs) {
+                if (classObject && classObject.parent) {
+                    var parentClass = FP.classColl[classObject.parent];
+                    parentClass.ctor.call(this, parentClass);
+                }
+                
+                for (var i in params) {
+                    //may need to filter more properties added by the user
+                    if (typeof params[i] !== 'function' && i !== 'extend') {
+                        this[i] = params[i];
+                    }
+                }
+                
+
+            }
+
+            if (params.extend) {
+                var parentClass = FP.classColl[params.extend];
+                //f.prototype = new parentClass.ctor;
+                f.prototype = Object.create(parentClass.ctor.prototype);//This saves from adding properties to the proto
+            } 
+            //Whether it is child or a base class functions can be added to the prototype as below
+            for (var i in params) {
+                if (typeof params[i] === 'function') {
+                    f.prototype[i] = params[i];
+                }
+            }
+            
+
+            return f;
+             
+        }
+        FP.define = function (name, params) {
+            var obj = {};
+            obj.parent = params.extend;
+            obj.ctor = FP.createCtor(params);
+            FP.classColl[name] = obj;
+        };
+        FP.create = function (name, params) {
+            var classObject = FP.classColl[name];//check for existence of the class name
+            if (classObject) {
+                var instance = FP.createInstance(classObject, params);
+                return instance;
+            }
+          
+        };
+
+        FP.createInstance = function (classObject, params) {
+            if (!params) {
+                return new classObject.ctor(classObject);
+            } else {
+                return new classObject.ctor(classObject, params);
+            }
+        }
+        
+
+        ////////////////////////////////////////////////////////////////////////
+        //Client code
+        FP.define('a', {
+            sal: 5000,
+            age: 30,
+            getSal: function () {
+                return 'Sal is:'+this.sal;
+            }
+        });
+        var a = FP.create('a');
+        console.log(a.age, a.sal);
+        console.log(a.getSal());
+        
+        FP.define('b', {
+            name: 'pankaj',
+            age: 18,
+            getAge: function () {
+                return 'Age is:'+this.age;
+            },
+            extend: 'a'
+        });
+        //var b = FP.create('b');
+        //console.log(b.getAge());
+
+        FP.define('c', {
+            test: 42,
+            getTest: function () {
+                return this.test;
+            },
+            extend: 'b'
+        });
+        FP.define('d', {
+            test2: 422,
+            getTest2: function () {
+                return this.test2;
+            },
+            extend: 'c'
+        });
+        var d = FP.create('d');
+        console.log(d.test, d.name, d.sal, d.getAge(), d.getSal(), d.getTest(), d.getTest2());
+        //function Employee() {
+        //    this.name = 'xyz';
+        //}
+        //Employee.prototype.getName = function () {
+        //    return this.name;
+        //}
+        //var e = new Employee();
+        //console.log(e.name);
+    </script>
+</body>
+</html>
