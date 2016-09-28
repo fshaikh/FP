@@ -1149,19 +1149,43 @@ describe("FPFramework",function(){
     // Spec# - should invoke overloaded function
     it("should invoke overloaded function",function(){
         FP.define('TestClass',{
-            overload:{
-                get:function(id){
-                    return id;
+            config:{
+                id:'1'
+            },
+            overload:[
+                // overload group  for 'get'
+                {
+                    name:'get',
+                    functions:[
+
+                    function get(){
+                        console.log('get all');
+                        },
+                    function get(fn,ln){
+                        console.log('Get by name: ' + this.id);
+                        return this.id;
+                    }
+                    ]
                 },
 
-                get:function(firstName,lastName){
-                    return "name";
+                {
+                    name:'insert',
+                    functions:[
+                        function(){
+                        console.log('insert all');
+                        },
+                        function(obj){
+                            console.log('inserting obj');
+                        }
+                    ]
                 }
-            }
+            ]
         });
 
-        var testObj = FP.create('TestClas');
-        expect(testObj.get('f','s').toEqual("name"));
+        var testObj = FP.create('TestClass');
+        expect(testObj.get).toBeDefined();
+        expect(testObj.insert).toBeDefined();
+        expect(testObj.get('f','s')).toEqual("1");
     });
 
     // More Specs to follow

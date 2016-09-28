@@ -479,7 +479,7 @@ var FP = FP || {};
     // };
 
     // This function adds the overloads using the scope chain/closure approach.
-    var addOVerloadFunctionCore2 = function(overloadConfig,className,ctor){
+    var addOVerloadFunctionCore2 = function(overloadConfig,className,sourceObj){
         // iterate the overloads config
         for (var index = 0; index < overloadConfig.length; index++) {
             var funcGroup = overloadConfig[index];
@@ -489,7 +489,7 @@ var FP = FP || {};
 
             // Add the overload function for each defined in this overload group
             for(var i = 0;i < length;i++){
-                   addOFunc(ctor.prototype,overloadGroupName,overloadFunctions[i]);  
+                   addOFunc(sourceObj,overloadGroupName,overloadFunctions[i]);  
             }
         } 
     };
