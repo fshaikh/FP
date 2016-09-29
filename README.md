@@ -1,4 +1,4 @@
-# Project Title
+# FP
 
 Javascript library for writing object-oriented code in JS applications. Supports Node.
 
@@ -124,9 +124,8 @@ Employee.instances = 2;
 console.log(Employee.getInstances());
 ```
 
-* Inheritance
+* Inheritance - Use 'extend' config to configure the base class
 ```
-** Use 'extend' config to configure the base class
  FP.define('BaseClass', {
         config:{
             sal: 5000,
@@ -173,35 +172,6 @@ console.log(Employee.getInstances());
 
         var d = FP.create('DerivedClass3');
         console.log(d.test, d.name, d.sal, d.getAge(), d.getSal(), d.getTest(), d.getTest2());
-```
-
-* Mixin
-```
-Use 'mixin' config to add behavior from other classes without inheriting from them
-
-FP.define('Observable',{
-    config:{
-        eventId:''
-    },
-    fireEvent:function(){
-        console.log('fire event');
-    }
-});
-
-FP.define('Builder',{
-    build:function(){
-        console.log('build');
-    }
-});
-
-FP.define('ViewController',{
-    mixin:['Observable','Builder'], // add mixins
-    // Object logic goes here...
-});
-
-var viewController = FP.create('ViewController');
-viewController.fireEvent(); // Invoke behavior of the mixin object - For eg: Observable
-viewController.build(); // Invoke behavior of the mixin object - For eg: Builder
 ```
 
 * Mixin - Use 'mixin' config to add behavior from other classes without inheriting from them
