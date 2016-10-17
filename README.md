@@ -49,6 +49,9 @@ FP provides powerful capability to design and implement class-based programming 
     #### CDN Access
     * [Production Version (0.1.0)](https://d1v87h9csg8bu5.cloudfront.net/FP-0.1.0.min.js)	4kb, Minified with Uglify
     * [Development Version (0.1.0)](https://d1v87h9csg8bu5.cloudfront.net/FP-0.1.0.js)	       26kb, Uncompressed with Comments
+    
+    * Add the following script tag:
+    ```<script type="text\javscript" href="(https://d1v87h9csg8bu5.cloudfront.net/FP-0.1.0.min.js"></script>```
 
 ### Node-based applications, use
 * [Standalone Module (0.1.0)](https://github.com/fshaikh/FP/blob/master/build/FPModule-0.1.0.js) 26 KB
