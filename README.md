@@ -325,6 +325,7 @@ FP.define('LogConsole',{
 });
 
 // This will throw an exception. Wrap the call in try/catch
+
 FP.define('LogConsoleDerived',{
     extend : 'LogConsole'
 });
@@ -334,6 +335,7 @@ FP.define('LogConsoleDerived',{
 
 To run Grunt and Jasmine Specs, you will need to install Node, NPM, Grunt and Jasmine. The node packages required for Grunt can be seen
 in package.json
+
 
 
 ### Installing
@@ -386,6 +388,8 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Acknowledgments
 
+## Pending
+* Config defined in a class marked as static (staticClass: true) should be exposed as static members
 
 
 	
