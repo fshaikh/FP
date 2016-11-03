@@ -425,6 +425,9 @@ var FP = FP || {};
         // create the constructor function
         var ctor = getConstructor(className,options,false);
 
+        // add static members
+        addStaticProperties(ctor,options.config);
+
         // add static functions
         addStaticFunctions(ctor,options);
 
