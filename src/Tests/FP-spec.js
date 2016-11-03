@@ -1005,6 +1005,27 @@ describe("FPFramework",function(){
 
         expect(this.globalScope.TestStaticClass.isNaN()).toEqual(20);
     });
+
+    // Spec# - should be able to define static members
+    it("should be able to define static members on a static class",function(){
+        var tempVar = 10;
+        // define a static class
+        FP.define("TestStaticClass",{
+            staticClass:true,
+
+            config:{
+                EU:'EU'
+            },
+            // static functions. No need to define under static config
+            isNaN:function(){
+                return 20;
+            }
+            
+        });
+
+        expect(this.globalScope.TestStaticClass.EU).toEqual('EU');
+    });
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Specs for static class - END
     ////////////////////////////////////////////////////////////////////////////////////////////////

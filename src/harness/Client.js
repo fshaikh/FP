@@ -157,7 +157,7 @@ viewController.fireEvent(); // Invoke behavior of the mixin object - For eg: Obs
 viewController.build(); // Invoke behavior of the mixin object - For eg: Builder
 
 // Singleton
-// Use 'singleton' config to create a class as a singleton
+// Use 'singleton' config to define a class as a singleton
 FP.define('Logger',{
     singleton:true,
 
@@ -187,6 +187,10 @@ console.log(loggerObj2.logType);
 // Use 'staticClass' config to create a static class
 FP.define('Utility',{
         staticClass:true,
+
+        config:{
+            EU:'EU'
+        },
 
         // This functions test for NaN equality
         isNaN:function(value){
