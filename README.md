@@ -390,6 +390,7 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Pending
 * Config defined in a class marked as static (staticClass: true) should be exposed as static members
+* Fix bug where reference properties defined in config are shared across instances
 
 
 	

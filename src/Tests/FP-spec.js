@@ -614,23 +614,24 @@ describe("FPFramework",function(){
         expect(derivedObj.getSalary()).toEqual(2000);
     });
 
-    // Spec# 28 - should be able to define get function on a nested config property
-    it("should be able to define get function on a nested config property",function(){
-         // define the class
-        FP.define('TestClass',{
-            config:{
-                total:100,
-                baseVal : 1,
-                nested:{
-                    prop1:100
-                }
-            }
-        });
+    // This test is not required since we will not support injecting get/set functions on nested config properties
+    // // Spec# 28 - should be able to define get function on a nested config property
+    // it("should be able to define get function on a nested config property",function(){
+    //      // define the class
+    //     FP.define('TestClass',{
+    //         config:{
+    //             total:100,
+    //             baseVal : 1,
+    //             nested:{
+    //                 prop1:100
+    //             }
+    //         }
+    //     });
 
-        var testObj = FP.create('TestClass',{total:200});
-        expect(testObj.getNested).toBeDefined();
-        expect(testObj.getNested.getProp1).toBeDefined();
-    });
+    //     var testObj = FP.create('TestClass',{total:200});
+    //     expect(testObj.getNested).toBeDefined();
+    //     expect(testObj.getNested.getProp1).toBeDefined();
+    // });
 
     // Spec# 29 - should be able to read nested property using the parent object
     it("should be able to read nested property using the parent object",function(){
@@ -1161,6 +1162,25 @@ describe("FPFramework",function(){
 
         var textFieldControl = FP.create('TextFieldControl');
         expect(textFieldControl.render()).toEqual(100);
+    });
+
+    // Spec# - should create a deep clone of reference properties deifned in config
+    it("should create a deep clone of reference properties deifned in config",function(){
+        FP.define('Promise',{
+            // base instance function
+            config:{
+                successArray:[]
+            }
+        });
+
+        var promise1 = FP.create('Promise');
+        promise1.successArray.push(1);
+
+        var promise2 = FP.create('Promise');
+        promise2.successArray.push(12);
+
+        expect(promise1.successArray.length).toEqual(1);
+        expect(promise2.successArray[0]).toEqual(12);
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,17 @@
 // 1. Set the global scope explicitly. If not set, FP framework will determine global scope on its own.
 FP.setGlobalScope(window);
 
+FP.define('NotWorking',{
+    config:{
+        array:[]
+    }
+});
+
+var obj1 = FP.create('NotWorking');
+obj1.array.push(100);
+var obj2 = FP.create('NotWorking');
+alert(obj2.array.length);
+
 // 2. Create a Employee class
 FP.define('Employee',{
 

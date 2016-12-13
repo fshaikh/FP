@@ -1,3 +1,4 @@
+
 // Usage:
 
 // 1. Set global scope explicitly using setGlobalScope function
@@ -80,6 +81,9 @@ var FP = FP || {};
     var setterFunctionPrefix = "set";
     var applyFunctionPrefix = "apply";
 
+    // Type constant
+    var arrayType = '[object Array]';
+    var objectType = '[object Object]';
    
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -291,7 +295,8 @@ var FP = FP || {};
     var addProperties = function(sourceObj,options){
         for(var property in options){
              if(options.hasOwnProperty(property)){
-                sourceObj[property] = options[property];
+                //Do a deep copy using "structured deep clone" algorithm.
+                sourceObj[property] = deepClone(options[property]);
              }
         }
     };
@@ -555,6 +560,35 @@ var FP = FP || {};
             parent = parent[classId];
         }
     };
+
+    // This function does a deep clone. Required when adding properties defined in config for reference types.
+    // NOTE: Not tested for cyclic references  :)
+    var deepClone = function(value){
+      // if value is null or undefined, return the same
+      if(value === null || value === undefined){
+        return value;
+      }
+
+      var clonedObj, index;
+      var sourceType = toString.call(value);
+
+      // handle array types
+      if(sourceType === arrayType){
+          index = value.length;
+          clonedObj = [];
+
+          while(index--){
+            clonedObj[index] = deepClone(value[index]);
+          }
+      }else if(sourceType === objectType){
+        clonedObj = {};
+        for(var prop in value){
+          clonedObj[prop] = deepClone(value[prop]);
+        }
+      }
+
+      return clonedObj || value;
+    };
     
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -655,8 +689,34 @@ var FP = FP || {};
             return value !== value ? true:false;
         },
 
+        // This function determines if passed in value is an integer
         isInteger : function(value){
+            // if ECMAScript 6 function is available, use it
+            if(Number.isInteger){
+              return Number.isInteger(value);
+            }
+
+            if(value === null || value === undefined){
+                return false;
+            }
             
+            if(typeof value !== 'number'){
+              return false;
+            }
+
+            return value % 1 === 0;
+        },
+
+        // This function determines if the passed in value is an object
+        // Reference - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Using_toString()_to_detect_object_class
+        isObject:function(value){
+          // null is of type "object" in JS. This condition handles that scenario
+          if(value === null || value === undefined){
+            return false;
+          }
+          
+          // This ia better way of testing for object type since it discards array and function types.
+          return toString.call(value) === '[object Object]';
         }
     });
 
