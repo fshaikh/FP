@@ -390,7 +390,8 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Pending
 * Config defined in a class marked as static (staticClass: true) should be exposed as static members
-* Fix bug where reference properties defined in config are shared across instances
+* Automate Deploy to GitHub, Upload S3 bucket (origin server), refresh AWS CloudFront distribution. Create a new deploy.bat file.
+
 
 
 	

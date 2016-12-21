@@ -85,6 +85,8 @@ var FP = FP || {};
     // Type constant
     var arrayType = '[object Array]';
     var objectType = '[object Object]';
+
+    var _version = "0.1.0"; // Current FP version
    
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +190,9 @@ var FP = FP || {};
         if(options && options.config){
             injectGetSetFunctions(ctor.prototype,options.config);
         }
+
+        // inject 'has' function on each prototpye
+        injectHasFunction(ctor.prototype);
     };
 
     // Helper function to add static properties and static functions
@@ -296,9 +301,7 @@ var FP = FP || {};
     var addProperties = function(sourceObj,options){
         for(var property in options){
              if(options.hasOwnProperty(property)){
-
-               // TODO: Do a deep copy using "structured deep clone" algorithm.
-                //sourceObj[property] = options[property];
+                //Do a deep copy using "structured deep clone" algorithm.
                 sourceObj[property] = deepClone(options[property]);
              }
         }
@@ -401,6 +404,20 @@ var FP = FP || {};
             this[property] = typeof newVal === "undefined" ? this[property] : newVal;
         };
     };
+
+    // inject 'has' function. Using this clients can determine if a specific config property is defined on the object or not. 
+        // NOTE: This only checks the own properties and does not navigate the prototype chain
+    var injectHasFunction = function(sourceObj){
+        sourceObj.has = function(propertyName){
+            if(propertyName === null || propertyName === undefined)
+                return false;
+
+            if(this.hasOwnProperty(propertyName)){
+                return true;
+            }
+            return false;
+        };
+    }
 
     // This function returns the prototype of a given object. Provides polyfill in case of older JS environments
     var getPrototype = function(obj){
@@ -666,6 +683,8 @@ var FP = FP || {};
     root.setGlobalScope = function(scope){
         globalScope = scope;
     };
+
+    root.VERSION = _version;
 
     // Define exception classes
 

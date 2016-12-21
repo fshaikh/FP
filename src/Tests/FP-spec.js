@@ -47,6 +47,20 @@ describe("FPFramework",function(){
         expect(testClassObj instanceof this.globalScope.TestClass).toEqual(true); 
     });
 
+    //Spec# - should verify if derived object is an instance of base object
+    it("should verify if derived object is an instance of base object",function(){
+        FP.define('Base');
+        FP.define('Derived',{
+            extend:'Base'
+        });
+
+        var base = FP.create('Base');
+        var derived = FP.create('Derived');
+
+        expect(derived instanceof this.globalScope.Base).toEqual(true);
+        expect(derived instanceof this.globalScope.Derived).toEqual(true);
+    });
+
     // Spec# - should tell whether constructor of instance equals the class constructor
     it("should tell whether constructor of instance equals the class constructor",function(){
         FP.define('TestClass');
@@ -1181,6 +1195,29 @@ describe("FPFramework",function(){
 
         expect(promise1.successArray.length).toEqual(1);
         expect(promise2.successArray[0]).toEqual(12);
+    });
+
+    // Spec# - should confirm if 'has' function is defined on the object
+    it("should confirm if 'has' function is defined on the object",function(){
+        FP.define('Core.UI.FieldBase');
+
+        var fieldBase = FP.create('Core.UI.FieldBase');
+
+        expect(fieldBase.has).toBeDefined();
+    });
+
+    // Spec# - should confirm if config property is defined on the object by using 'has' function
+    it("should confirm if config property is defined on the object by using 'has' function",function(){
+        FP.define('Core.UI.FieldBase',{
+            config:{
+                age:10,
+                year:1984
+            }
+        });
+        var fieldBase = FP.create('Core.UI.FieldBase');
+
+        expect(fieldBase.has('age')).toEqual(true);
+        expect(fieldBase.has('email')).toEqual(false);
     });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
