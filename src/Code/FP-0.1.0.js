@@ -108,11 +108,15 @@ var FP = FP || {};
 
     // Helper method to create constructor for base/derived classes
     var getConstructor = function(className,options,isExtend){
+        var ctor;
         if(isExtend){
-            return createChildConstructor(className,options.extend);
+            ctor =  createChildConstructor(className,options.extend);
         }else{
-            return createConstructor(className);
+            ctor =  createConstructor(className);
         }
+        // set the class name. Setting on prototype rather than on each instance
+        ctor.prototype._className = className;
+        return ctor;
     };
 
     // Helper method to create constructor function
@@ -123,9 +127,6 @@ var FP = FP || {};
 
                // add instance members
                addProperties(this,data);
-
-               // set the class name
-                this._className = className;
 
                // invoke the constructor if its defined
                invokeConstructor(this,data);

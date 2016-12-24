@@ -1220,6 +1220,43 @@ describe("FPFramework",function(){
         expect(fieldBase.has('email')).toEqual(false);
     });
 
+    // Spec# - should define _className property on object prototype and not on object
+    it("should define _className property on object prototype and not on object",function(){
+        FP.define('Vehicle',{
+            config:{
+                wheels:4
+            },
+            run:function(){
+                console.log('runs on ' + this.getWheels() + ' wheels');
+            }
+        });
+
+        var vehicle = FP.create('Vehicle');
+        expect(vehicle.__proto__._className).toBeDefined();
+        expect(vehicle.hasOwnProperty('_className')).toEqual(false);
+    });
+
+    // Spec# - should define default config properties on prototype rather than on objects
+    // it("should define default config properties on prototype rather than on objects",function(){
+    //     FP.define('Core.UI.FieldBase',{
+    //         config:{
+    //             age:10,
+    //             year:1984,
+    //             array:[]
+    //         }
+    //     });
+
+    //     var fieldBase = FP.create('Core.UI.FieldBase',{age:'furqan'});
+    //     var fieldBase2 = FP.create('Core.UI.FieldBase');
+
+    //     //expect(fieldBase.getAge()).toEqual('furqan');
+    //     // expect(Core.UI.FieldBase.prototype.age).toBeDefined();
+    //     // expect(fieldBase.array === fieldBase2.array).toEqual(true);
+    //     // expect(fieldBase.getAge() === fieldBase2.getAge()).toEqual(true);
+
+
+    // });
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Specs for Function Overloading - START
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
