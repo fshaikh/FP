@@ -1178,7 +1178,7 @@ describe("FPFramework",function(){
         expect(textFieldControl.render()).toEqual(100);
     });
 
-    // Spec# - should create a deep clone of reference properties deifned in config
+    // Spec# - should create a deep clone of reference properties defined in config
     it("should create a deep clone of reference properties deifned in config",function(){
         FP.define('Promise',{
             // base instance function
@@ -1193,8 +1193,8 @@ describe("FPFramework",function(){
         var promise2 = FP.create('Promise');
         promise2.successArray.push(12);
 
-        expect(promise1.successArray.length).toEqual(1);
-        expect(promise2.successArray[0]).toEqual(12);
+        expect(promise1.successArray.length).toEqual(2);
+        expect(promise2.successArray[0]).toEqual(1);
     });
 
     // Spec# - should confirm if 'has' function is defined on the object
@@ -1214,9 +1214,10 @@ describe("FPFramework",function(){
                 year:1984
             }
         });
-        var fieldBase = FP.create('Core.UI.FieldBase');
+        var fieldBase = FP.create('Core.UI.FieldBase',{year:2010});
 
-        expect(fieldBase.has('age')).toEqual(true);
+        expect(fieldBase.has('age')).toEqual(false);
+        expect(fieldBase.has('year')).toEqual(true);
         expect(fieldBase.has('email')).toEqual(false);
     });
 
@@ -1237,25 +1238,26 @@ describe("FPFramework",function(){
     });
 
     // Spec# - should define default config properties on prototype rather than on objects
-    // it("should define default config properties on prototype rather than on objects",function(){
-    //     FP.define('Core.UI.FieldBase',{
-    //         config:{
-    //             age:10,
-    //             year:1984,
-    //             array:[]
-    //         }
-    //     });
+    it("should define default config properties on prototype rather than on objects",function(){
+        FP.define('Core.UI.FieldBase',{
+            config:{
+                age:10,
+                year:1984,
+                array:[]
+            }
+        });
 
-    //     var fieldBase = FP.create('Core.UI.FieldBase',{age:'furqan'});
-    //     var fieldBase2 = FP.create('Core.UI.FieldBase');
+        var fieldBase = FP.create('Core.UI.FieldBase',{age:'furqan',array:[1,2,3]});
+        var fieldBase2 = FP.create('Core.UI.FieldBase');
 
-    //     //expect(fieldBase.getAge()).toEqual('furqan');
-    //     // expect(Core.UI.FieldBase.prototype.age).toBeDefined();
-    //     // expect(fieldBase.array === fieldBase2.array).toEqual(true);
-    //     // expect(fieldBase.getAge() === fieldBase2.getAge()).toEqual(true);
+        expect(fieldBase.getAge()).toEqual('furqan');
+        expect(fieldBase.age).toBeDefined();
+        expect(this.globalScope.Core.UI.FieldBase.prototype.age).toBeDefined();
+        expect(fieldBase.array === fieldBase2.array).toEqual(false);
+        expect(fieldBase.getAge() === fieldBase2.getAge()).toEqual(false);
 
 
-    // });
+    });
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Specs for Function Overloading - START

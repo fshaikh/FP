@@ -116,14 +116,19 @@ var FP = FP || {};
         }
         // set the class name. Setting on prototype rather than on each instance
         ctor.prototype._className = className;
+
+        // add default config properties on prototype
+        if(options && options.config){
+            addProperties(ctor.prototype,options.config);
+        }
         return ctor;
     };
 
     // Helper method to create constructor function
     var createConstructor = function(className){
         var constructorFunction = function (data){
-                // apply defaults
-                data = applyDefaults(className,data);
+                // apply defaults - This is no longer required since we are now adding the default config properties at prototype and create time properties at object level.
+                // data = applyDefaults(className,data);
 
                // add instance members
                addProperties(this,data);
@@ -143,7 +148,7 @@ var FP = FP || {};
             // constructor function for derived objects
             var constructor = function(data){
                 // apply defaults
-                data = applyDefaults(className,data);
+                // data = applyDefaults(className,data);
 
                 // Constructor stealing to invoke base object constructor
                 parentClassObject.data.ctor.call(this,data);
@@ -301,8 +306,9 @@ var FP = FP || {};
     var addProperties = function(sourceObj,options){
         for(var property in options){
              if(options.hasOwnProperty(property)){
+                 sourceObj[property] = options[property];
                 //Do a deep copy using "structured deep clone" algorithm.
-                sourceObj[property] = deepClone(options[property]);
+                //sourceObj[property] = deepClone(options[property]);
              }
         }
     };
