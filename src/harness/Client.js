@@ -279,13 +279,27 @@ textFieldControl.render();
 // A class can be marked as sealed i.e not allow any further inheritance by using "sealed" config.
 // Expected values : true / false
 FP.define('LogConsole',{
-      sealed:true,
+      //sealed:true,
 });
 
 // This will throw an exception. Wrap the call in try/catch
 FP.define('LogConsoleDerived',{
     extend : 'LogConsole'
 });
+
+
+// LRU Cache demo
+var lruCache = FP.create('FP.LRUCache',{capacity:3});
+lruCache.set("1",1);
+lruCache.set("2",2);
+lruCache.set("3",3);
+lruCache.set("4",4);
+
+console.log(lruCache.get("1"));
+console.log(lruCache.get("2"));
+console.log(lruCache.get("3"));
+
+
 
 
 
