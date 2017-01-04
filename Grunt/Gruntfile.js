@@ -23,7 +23,7 @@ module.exports = function(grunt){
                     '../src/Code/*.js',  // location of javascript files
                 ],
                 options: {
-                    'specs': ['../src/Tests/FP-spec.js','../src/Tests/FPUtil-spec.js'] // location of spec files
+                    'specs': ['../src/Tests/FP-spec.js','../src/Tests/FPUtil-spec.js','../src/Tests/FP.LRUCache-spec.js'] // location of spec files
                 }
             }
         },

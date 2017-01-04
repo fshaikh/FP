@@ -416,15 +416,16 @@ var FP = FP || {};
         // NOTE: This only checks the own properties and does not navigate the prototype chain
     var injectHasFunction = function(sourceObj){
         sourceObj.has = function(propertyName){
-            if(propertyName === null || propertyName === undefined)
+            if(propertyName === null || propertyName === undefined){
                 return false;
+            }
 
             if(this.hasOwnProperty(propertyName)){
                 return true;
             }
             return false;
         };
-    }
+    };
 
     // This function returns the prototype of a given object. Provides polyfill in case of older JS environments
     var getPrototype = function(obj){
@@ -748,6 +749,152 @@ var FP = FP || {};
           return toString.call(value) === '[object Object]';
         }
     });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    FP.Util - END
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    FP.LRUCache - START
+    //  Implements a cache based on Least Recently Used eviction strategy
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // This class represents node of a doubly linked list
+    FP.define('FP.LRUCache.Node',{
+        config:{
+            key:{},
+            value:{},
+            previous:null,
+            next:null
+        }
+    });
+
+    // Class which implements a cache with LRU eviction strategy. It works the following way:
+    //     All cache items are nodes of a doubly linked list
+    //     For O(1) insertions/reads, hash table is used to store <cache key> : <Reference to Node in the DLL>
+    
+    //     1. Client sets initial capacity for the cache
+    //     2. When an item is added to the cache, it is placed at the head of the list
+    FP.define('FP.LRUCache',{
+        config:{
+            nodeEntries:{}, // map containing key as key and reference to cache Node as value
+            capacity:5 ,    // cache size. When the cache size exceeds the capacity, LRU eviction is done
+            head:null,
+            tail:null,
+            currentNodeCount:0
+        },
+
+        constructor:function(data){
+            if(data == null){  // jshint ignore:line
+                return;
+            }
+            this.capacity = data.capacity;
+
+        },
+
+        /**
+         * Add entry to the cache.
+         * key - must be a string value
+         * value - any JavaScript type instance
+         */
+        set:function(key,value){
+            var node;
+            if(!this.nodeEntries.hasOwnProperty(key)){
+                // If cache has reached capacity, evict LRU node
+                if(this.capacity === this.currentNodeCount){
+                   this._evictLRUNode();
+                }
+
+                // 1. Create the node
+                node = this._createNode(key,value);
+                // 2. Move the node to the start of the list
+                this._moveNodeToHead(node);
+                // 3. Add key entry to hash table
+                this.nodeEntries[key] = node;
+                this.currentNodeCount++;
+            }else{
+                // key already present,so replace it.
+                var existingNode = this.nodeEntries[key];
+                // set the value in the hash table
+                existingNode.value = value;
+                //   2. Move the node to the start of the list
+                this._moveNodeToHead(existingNode);
+            }
+        },
+
+        get:function(key){
+            // check if key is present in the cache. If not return null.
+            if(!this.nodeEntries.hasOwnProperty(key)){
+                return null;
+            }
+            
+            var node = this.nodeEntries[key];
+            // move the node to head since its accessed most Recently
+            this._moveNodeToHead(node);
+            return node.value;
+        },
+
+        /**
+         * Creates a node containing key and value.
+         */
+        _createNode:function(key,value){
+            var node = FP.create('FP.LRUCache.Node');
+            node.setKey(key);
+            node.setValue(value);
+
+            return node;
+        },
+
+        /**
+         * Moves the recently accessed node to the head of the list
+         */
+        _moveNodeToHead:function(node){
+            // If this is the first node, set head and tail to the node
+            if(this.head === null){
+                this.head = node;
+                this.tail = node;
+                return;
+            }
+
+            // If the node has a previous node, change the previous node's next pointer to point to node's next node.
+            //         
+            if(node.previous !== null){
+                node.previous.next = node.next;
+            }
+
+            // If the node has next node, change its previous pointer to point to node's previous 
+            if(node.next !== null)
+            {
+                node.next.previous = node.previous;
+            }
+
+            // If this is the tail, change the tail to be the previous node. That marks the previous node as LRU
+            if(this.tail === node)
+            {
+                this.tail = node.previous;
+            }
+
+            // Do head pointer manipulation
+            node.next = this.head;
+            this.head.previous = node;
+            this.head = node;
+            node.previous = null;
+        },
+
+        _evictLRUNode:function(){
+             //   evict the least recently used node. That will be the tail node
+             var temp = this.tail;
+             this.tail = this.tail.previous;
+
+              // Remove the entry from the hash table
+              delete this.nodeEntries[temp.key];
+              this.tail.next = null;
+              temp = null;
+              this.currentNodeCount--;
+        }
+    });
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    FP.LRUCache - END
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
      // Freeze the root object to prevent inadvertent changes to the root object by consumers of the library.
     if(Object.freeze){

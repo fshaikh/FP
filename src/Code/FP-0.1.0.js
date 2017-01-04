@@ -415,15 +415,16 @@ var FP = FP || {};
         // NOTE: This only checks the own properties and does not navigate the prototype chain
     var injectHasFunction = function(sourceObj){
         sourceObj.has = function(propertyName){
-            if(propertyName === null || propertyName === undefined)
+            if(propertyName === null || propertyName === undefined){
                 return false;
+            }
 
             if(this.hasOwnProperty(propertyName)){
                 return true;
             }
             return false;
         };
-    }
+    };
 
     // This function returns the prototype of a given object. Provides polyfill in case of older JS environments
     var getPrototype = function(obj){
@@ -782,6 +783,9 @@ var FP = FP || {};
         },
 
         constructor:function(data){
+            if(data == null){  // jshint ignore:line
+                return;
+            }
             this.capacity = data.capacity;
 
         },
@@ -795,7 +799,7 @@ var FP = FP || {};
             var node;
             if(!this.nodeEntries.hasOwnProperty(key)){
                 // If cache has reached capacity, evict LRU node
-                if(this.capacity == this.currentNodeCount){
+                if(this.capacity === this.currentNodeCount){
                    this._evictLRUNode();
                 }
 
@@ -818,8 +822,9 @@ var FP = FP || {};
 
         get:function(key){
             // check if key is present in the cache. If not return null.
-            if(!this.nodeEntries.hasOwnProperty(key))
+            if(!this.nodeEntries.hasOwnProperty(key)){
                 return null;
+            }
             
             var node = this.nodeEntries[key];
             // move the node to head since its accessed most Recently
@@ -843,7 +848,7 @@ var FP = FP || {};
          */
         _moveNodeToHead:function(node){
             // If this is the first node, set head and tail to the node
-            if(this.head == null){
+            if(this.head === null){
                 this.head = node;
                 this.tail = node;
                 return;

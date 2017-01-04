@@ -3,17 +3,6 @@
 // 1. Set the global scope explicitly. If not set, FP framework will determine global scope on its own.
 FP.setGlobalScope(window);
 
-FP.define('NotWorking',{
-    config:{
-        array:[]
-    }
-});
-
-var obj1 = FP.create('NotWorking');
-obj1.array.push(100);
-var obj2 = FP.create('NotWorking');
-alert(obj2.array.length);
-
 // 2. Create a Employee class
 FP.define('Employee',{
 
@@ -295,9 +284,13 @@ lruCache.set("2",2);
 lruCache.set("3",3);
 lruCache.set("4",4);
 
-console.log(lruCache.get("1"));
-console.log(lruCache.get("2"));
-console.log(lruCache.get("3"));
+
+var lruCache1 = FP.create('FP.LRUCache',{capacity:3});
+lruCache1.set("1",1);
+lruCache1.set("2",2);
+lruCache1.set("3",3);
+lruCache1.set("4",4);
+
 
 
 
