@@ -3,6 +3,19 @@
 // 1. Set the global scope explicitly. If not set, FP framework will determine global scope on its own.
 FP.setGlobalScope(window);
 
+function firstHandler(){
+           console.log('first handler');
+       }
+
+       function secondHandler(){
+           console.log('second handler');
+       }
+       var eventEmitter = FP.create('FP.EventEmitter');
+        eventEmitter.on('begin',firstHandler);
+        eventEmitter.on('begin',secondHandler);
+
+        var listenersCount = eventEmitter.listenersCount;
+
 // 2. Create a Employee class
 FP.define('Employee',{
 

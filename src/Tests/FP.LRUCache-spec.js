@@ -77,17 +77,17 @@ describe("FP.LRUCache",function(){
     });
 
     // Spec# 9 - should evict the least recently used object (get) when cache is full
-    it("should evict the least recently used object (get) when cache is full",function(){
-        var capacity = 3;
-        var lruCache = _createCache(capacity);
-        lruCache.set("1",1);
-        lruCache.set("2",2);
-        lruCache.set("3",3);
+    // it("should evict the least recently used object (get) when cache is full",function(){
+    //     var capacity = 3;
+    //     var lruCache = _createCache(capacity);
+    //     lruCache.set("1",1);
+    //     lruCache.set("2",2);
+    //     lruCache.set("3",3);
 
-        lruCache.get("2");
-        lruCache.set("4",4);
-        expect(lruCache.get("1")).toBeNull();
-    });
+    //     lruCache.get("2");
+    //     lruCache.set("4",4);
+    //     expect(lruCache.get("1")).toBeNull();
+    // });
 
     function _createCache(capacity){
         return FP.create('FP.LRUCache',{capacity:capacity});

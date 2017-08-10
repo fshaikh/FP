@@ -592,7 +592,7 @@ var FP = FP || {};
     // NOTE: Not tested for cyclic references  :)
     var deepClone = function(value){
       // if value is null or undefined, return the same
-      if(value === null || value === undefined){
+      if(value == null){
         return value;
       }
 
@@ -893,6 +893,71 @@ var FP = FP || {};
     });
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //    FP.LRUCache - END
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    FP.EventEmitter - START
+    //  Implements asynchronous event-driven architecture in which certain kinds of objects (called "emitters") periodically emit
+    //  named events that cause Function objects ("listeners") to be called.
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    FP.define('FP.EventEmitter',{
+        config:{
+            _events:{}
+        },
+
+        constructor:function(){
+            this._events = Object.create(null);
+        },
+
+        on:function(key,handler){
+            // any type checking
+            if(!key){
+                throw TypeError('key cannot be null or empty');
+            }
+
+            if(typeof handler !== 'function'){
+                throw TypeError('handler must be a function');
+            }
+
+            var event = this._events[key];
+            // if no event is registered, this is the first time, so simply add it
+            // else push the handler to the events object
+            event ? event.push(handler) : ( this._events[key] = [handler]);
+        
+            // Return to allow chaining of function invocations.
+            return this;
+        },
+
+        emit: function(key){
+            if(!key){
+                throw TypeError('key cannot be null or empty');
+            }
+
+            // check if any event is registered
+            var eventHandlers = this._events[key];
+            // early return
+            if(!eventHandlers){
+                return this;
+            }
+
+            var length = eventHandlers.length;
+            for(var index=0;index<length;index++){
+                eventHandlers[index].apply(this,[].slice.call(arguments,1));
+            }
+            return this;
+        },
+
+        listenersCount:function(key){
+            if(!key){
+                throw TypeError('key cannot be null or empty');
+            }
+            var event = this._events[key];
+            return event ? event.length : -1;
+        }
+    });
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    FP.EventEmitter - END
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
      // Freeze the root object to prevent inadvertent changes to the root object by consumers of the library.
