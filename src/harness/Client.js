@@ -13,7 +13,7 @@ function firstHandler(){
        var eventEmitter = FP.create('FP.EventEmitter');
         eventEmitter.on('begin',firstHandler);
         eventEmitter.on('begin',secondHandler);
-
+        eventEmitter.removeListeners('begin',firstHandler);
         var listenersCount = eventEmitter.listenersCount;
 
 // 2. Create a Employee class
