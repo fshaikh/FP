@@ -63,6 +63,22 @@ describe("FP.EventEmitter",function(){
 
     });
 
+    // Spec# 6 - should be able to remove listeners based on key
+    it("should be able to remove listeners based on key",function(){
+        var eventEmitter = _createEventEmitter();
+        var before = 10;
+       function firstHandler(data){
+           before = data;
+       }
+       eventEmitter.on('begin',firstHandler);
+       
+       eventEmitter.removeListeners('begin',firstHandler);
+       //eventEmitter.emit('begin');
+
+       expect(before).toEqual(10);
+
+    });
+
     function _createEventEmitter(){
         return FP.create('FP.EventEmitter');
     }

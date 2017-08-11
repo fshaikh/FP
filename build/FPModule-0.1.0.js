@@ -910,6 +910,9 @@ var FP = FP || {};
             this._events = Object.create(null);
         },
 
+        /**
+         * Registers the listeners based on the passed in key. Key must be string value. Symbol is not yet supported
+         */
         on:function(key,handler){
             // any type checking
             if(!key){
@@ -929,6 +932,10 @@ var FP = FP || {};
             return this;
         },
 
+        /**
+         * Notifies the listeners based on the passed in key. All listeners registered with the same key will be notified in sequence.
+         * Any data passed by the caller will be sent along a well.
+         */
         emit: function(key){
             if(!key){
                 throw TypeError('key cannot be null or empty');
@@ -948,6 +955,35 @@ var FP = FP || {};
             return this;
         },
 
+        removeListeners:function(key,handler){
+            // any type checking
+            if(!key){
+                throw TypeError('key cannot be null or empty');
+            }
+
+            if(typeof handler !== 'function'){
+                throw TypeError('handler must be a function');
+            }
+
+            // get the listeners, if any based on the key
+            var events = this._events[key];
+            // If there are no listeners registered, return early passing this to allow chaining
+            if(!events){
+                return this;
+            }
+
+            // find the index of the handler in the registered array of listeners
+            var index = events.findIndex(function(item){
+                return item === handler;
+            });
+            // if not found return
+            if(index === -1){
+                return this;
+            }
+            // remove the handler
+            events.splice(index,1);
+            return this;
+        },
         listenersCount:function(key){
             if(!key){
                 throw TypeError('key cannot be null or empty');
